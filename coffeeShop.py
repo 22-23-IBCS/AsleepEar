@@ -1,9 +1,6 @@
 class coffeeShop():
 
     def __init__(self):
-        self.coffee = 4.00
-        self.latte = 4.50
-        self.hotCider = 3.0
         self.size = ""
         self.sizes = {"small" : 0.45, "medium": 0.60, "large" : 0.80}
         self.drinks = {"coffee" : 4.00, "latte": 4.50, "hot cider": 3.0}
