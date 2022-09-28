@@ -56,6 +56,8 @@ def main():
         print("What size would you like?\n")
         size = shop.setSize()
         price += shop.sizes[size]
+        price *= 1.10 #sales tax
+        price += 0.30 #hidden fees
         name = input("What is your name?\n")
         print("Here is your " + option + ", " + name + ". That will be $" + str(price))
         
