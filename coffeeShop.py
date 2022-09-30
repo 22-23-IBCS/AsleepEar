@@ -39,7 +39,7 @@ class coffeeShop():
 def main():
 
 
-    shop = coffeeShop()
+    shop = coffeeShop() 
     
     print("Hi, welcome to coffee shop. Please pick an option.")
     greet= int(input("1. Order, 2. getPrice: "))
