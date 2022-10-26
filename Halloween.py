@@ -47,12 +47,17 @@ def main():
     
     neighborhood = []
 
-
+    temp = [[10,10,10,10,10],
+            [10,10,10,10,1],
+            [10,10,10,10,10],
+            [10,10,10,10,10],
+            [10,10,10,10,10]]
     nAvg = 0
     for i in range(5):
         neighborhood.append([])
         for j in range(5):
             neighborhood[i].append(House())
+            neighborhood[i][j].value = temp[i][j]
             nAvg += neighborhood[i][len(neighborhood[i])-1].value
     nAvg /= 25
 
