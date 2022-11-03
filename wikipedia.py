@@ -2,6 +2,13 @@ import requests
 def main():
     session = requests.Session()
 
+    test = [1,2,3,4,5]
+    for i in test:
+        if i == 2:
+            test.remove(i)
+        print(i)
+    print(test)
+    return 0
     url = "https://en.wikipedia.org/w/api.php"
     params = {
         "action": "query",
