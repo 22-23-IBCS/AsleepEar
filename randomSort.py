@@ -1,7 +1,11 @@
 import random
+import time
 
 def main():
-    l = [1,4,6,8,2,585,24,64,7]
+    n = 10
+    l = [random.randint(0,n) for i in range(n)]
+    print(l)
+    t = time.time()
     while True:
         a = random.randint(0,len(l)-1)
         b = random.randint(0,len(l)-1)
@@ -14,6 +18,7 @@ def main():
         if isSorted:
             break
 
+    print("time: " + str(time.time()-t))
     print(l)
         
 
