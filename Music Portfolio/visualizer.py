@@ -8,7 +8,6 @@ import queue
 import reading_audio_data as Audio
 import numpy as np
 from playIt import sounders
-import collections
 import copy
 
 
@@ -30,33 +29,35 @@ class visualizer():
         self.isPaused = False
         self.goNow = queue.Queue()
         self.end = queue.Queue()
+        self.taskComplete = threading.Event()
         self.generateFreq(path)
+        self.con = True
         
     def generateFreq(self, path):
         sound = Audio.AudioData(path, self.barCount)
-        self.queue = collections.deque()
+        self.queue = []
         for i in range(int(32*(int(len(sound.data)/sound.samplerate)))):
-            self.queue.appendleft(list(map(lambda x: self.win.height-(x*self.win.height), sound.getAverages(i, i+1))))
+            self.queue.append(list(map(lambda x: self.win.height-(x*self.win.height), sound.getAverages(i, i+1))))
         self.original = copy.deepcopy(self.queue)
         
     def changeY(self):
         if self.isPaused == False:
-            self.queue = copy.deepcopy(self.original)
             self.thd = threadedTask(self.goNow, self.path, self.end)
             self.thd.start()
             self.pr.changeText("Pause")
+            self.count = 0
         else:
+            
             self.pr.changeText("Pause")
             self.isPaused = False
             self.thd.resume.set()
             
+        self.m = self.win.checkMouse()
         
-        m = self.win.checkMouse()
-
         if self.goNow.get():
             
-            while m == None or self.test.isClicked(m) != True:
-                if m != None and self.pr.isClicked(m):
+            while (self.m == None or self.test.isClicked(self.m) != True) and self.con:
+                if self.m != None and self.pr.isClicked(self.m):
                     self.thd.pr.set()
                     self.isPaused = True
                     self.pr.changeText("Resume")
@@ -64,17 +65,22 @@ class visualizer():
                     
                 try:
                     if self.goNow.get():
-                        a = self.queue.pop()
+                        a = self.queue[self.count]
                         self.rex = list(map(lambda x: self.theNewest(x,a), self.rex))
+                        self.count += 1
                 except:
                     break
                     
-                m = self.win.checkMouse()
+                self.m = self.win.checkMouse()
         self.thd.stop.set()
         self.thd.join()
-        self.rex = list(map(lambda x: self.theNewest(x,[560]*self.barCount), self.rex))
+        print(threading.current_thread())
+        if self.con:
+            self.rex = list(map(lambda x: self.theNewest(x,[560]*self.barCount), self.rex))
         self.isPaused = False
         self.pr.changeText("Play")
+        self.taskComplete.set()
+        #self.queue = copy.deepcopy(self.original)
 
 
     def theNewest(self, x, y):
@@ -92,6 +98,8 @@ class visualizer():
 
 
 
+        
+        
 class threadedTask(threading.Thread):
 
     def __init__(self, queue, path, end):
@@ -114,8 +122,9 @@ class threadedTask(threading.Thread):
                 c += 1
              try:
                  if self.stop.is_set():
-                    self.stop.clear()
                     self.sounds.nssound.stop()
+                    self.stop.clear()
+                    
                     break
                  elif self.pr.is_set():
                      self.sounds.nssound.pause()
@@ -126,31 +135,7 @@ class threadedTask(threading.Thread):
                      
                      
              except:
+                 print("flarbo")
                  continue
 
-'''
-def main():
-    win = GraphWin("Music Portfolio", 800, 600)
-    play = Button(win, "white", "Play", Point(400,200),45)
-    test = Button(win, "white", "Stop", Point(400,300),45)
-
-    v = visualizer(win, test, play, "Monarch.wav")
-    print("done")
-    m = win.getMouse()
     
-    while True:
-        if play.isClicked(m):
-            v.changeY()
-
-        if test.isClicked(m):
-            print("toodles")
-
-        
-
-        
-        m = win.getMouse()
-        
-
-if __name__ == "__main__":
-    main()
-'''

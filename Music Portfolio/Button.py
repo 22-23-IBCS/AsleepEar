@@ -38,6 +38,7 @@ class Button():
         self.t.setSize(18)
         self.t.draw(self.win)
     
-
+    def getCenter(self):
+        return self.center
 
 

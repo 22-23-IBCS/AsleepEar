@@ -1,6 +1,7 @@
 from scipy.io import wavfile
 import numpy as np
 import time
+import pyfftw
 class AudioData():
 
     def __init__(self, audioFile, barcount):
@@ -9,7 +10,7 @@ class AudioData():
         self.samplerate, self.data = wavfile.read(audioFile)
         self.data = self.data if len(self.data.shape) == 1 else self.data[:,1]
         self.inter = int(self.samplerate*(1/32))
-        z = np.abs(np.fft.fftn(self.data, norm="forward"))
+        z = np.abs(pyfftw.interfaces.numpy_fft.fftn(self.data, norm="forward"))
         self.norm = max(z)
         self.ready = True
 
@@ -20,8 +21,8 @@ class AudioData():
         ranges = []
         rab = []
         try:
-            yf = np.fft.fftn(self.data[self.inter*fro:self.inter*to], norm="forward")
-            yf = yf[int((1/self.barCount)*len(yf)):int((self.barCount-1/self.barCount)*len(yf))]
+            yf = pyfftw.interfaces.numpy_fft.fftn(self.data[self.inter*fro:self.inter*to], norm="forward")
+            #yf = yf[int((1/self.barCount)*len(yf)):int((self.barCount-1/self.barCount)*len(yf))]
         except ValueError:
             print(self.data[self.inter*fro:self.inter*to])
             print(fro)
