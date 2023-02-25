@@ -78,31 +78,4 @@ class sounders():
                 logger.debug('Failed to load sound, although url was good... ' + sound)
         else:
             raise PlaysoundException('Could not load sound with filename, although URL was good... ' + sound)
-        
-        
-'''
-def main():
-    win = GraphWin("Music Portfolio", 800, 600)
-    play = Button(win, "white", "Play", Point(400,200),45)
-    test = Button(win, "white", "test", Point(400,400),45)
-    m = win.getMouse()
-    t1 = threading.Thread(target=playSong)
-    while True:
-        if play.isClicked(m):
-            
-            t1.start()
-            
-        if test.isClicked(m):
-            print(threading.active_count())
-            print(t1.n.x)
-        m = win.getMouse()
-        
-            
-    
-    
-    
 
-
-if __name__=="__main__":
-    main()
-    '''

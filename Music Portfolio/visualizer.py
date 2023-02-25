@@ -1,9 +1,6 @@
-import tkinter as tk
 from graphics import*
 from Button import*
 import threading
-import random
-import time
 import queue
 import reading_audio_data as Audio
 import numpy as np
@@ -28,8 +25,6 @@ class visualizer():
         
         self.isPaused = False
         self.goNow = queue.Queue()
-        self.end = queue.Queue()
-        self.taskComplete = threading.Event()
         self.generateFreq(path)
         self.con = True
         
@@ -42,7 +37,7 @@ class visualizer():
         
     def changeY(self):
         if self.isPaused == False:
-            self.thd = threadedTask(self.goNow, self.path, self.end)
+            self.thd = threadedTask(self.goNow, self.path)
             self.thd.start()
             self.pr.changeText("Pause")
             self.count = 0
@@ -79,8 +74,6 @@ class visualizer():
             self.rex = list(map(lambda x: self.theNewest(x,[560]*self.barCount), self.rex))
         self.isPaused = False
         self.pr.changeText("Play")
-        self.taskComplete.set()
-        #self.queue = copy.deepcopy(self.original)
 
 
     def theNewest(self, x, y):
@@ -102,9 +95,8 @@ class visualizer():
         
 class threadedTask(threading.Thread):
 
-    def __init__(self, queue, path, end):
+    def __init__(self, queue, path):
         super().__init__()
-        self.end = end
         self.queue = queue
         self.sounds = sounders(path)
         self.pr = threading.Event()
@@ -120,22 +112,16 @@ class threadedTask(threading.Thread):
              if(self.sounds.getPlayTime()) >= c*(1/32):
                 self.queue.put(True)
                 c += 1
-             try:
-                 if self.stop.is_set():
-                    self.sounds.nssound.stop()
-                    self.stop.clear()
-                    
-                    break
-                 elif self.pr.is_set():
-                     self.sounds.nssound.pause()
-                     self.pr.clear()
-                     self.resume.wait()
-                     self.sounds.nssound.resume()
-                     self.resume.clear()
+             if self.stop.is_set():
+                self.sounds.nssound.stop()
+                self.stop.clear()
+                break
+             elif self.pr.is_set():
+                self.sounds.nssound.pause()
+                self.pr.clear()
+                self.resume.wait()
+                self.sounds.nssound.resume()
+                self.resume.clear()
                      
-                     
-             except:
-                 print("flarbo")
-                 continue
 
     
