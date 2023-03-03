@@ -4,7 +4,6 @@ from scrollBox import*
 import visualizer as vis
 from Dropmenu import*
 import os
-import time
 
 
 class MusicPortfolio():
@@ -15,6 +14,7 @@ class MusicPortfolio():
         self.test = Button(self.win, "white", "Stop", Point(450,480),45)
         self.updateBio = Button(self.win, "white", "Update\nBio", Point(100,140),45)
         self.loading = Text(Point(400,440), "Loading Audio, Please Wait...")
+        self.missingCover = Text(Point(400,250), "Missing album cover")
         a = [i[:len(i)-4] for i in os.listdir(path="AudioFiles") if i[len(i)-4:] == ".wav"]
         temp = ""
         if not os.path.exists("aboutMe.txt"):
@@ -30,14 +30,21 @@ class MusicPortfolio():
             a[i] = a[i].split("_")[1]
             
         
-         
-        self.bio = scrollBox(self.win, Point(100,300), 20,20, True)
+        
+        self.bio = scrollBox(self.win, Point(100,300), 20,20)
         self.bio.draw(self.win)
         self.bio.setText(temp)
-        self.musicSelection = Dropmenu(self.win, Point(400,50), a[0], a, self.updateSong)
-        self.musicSelection.draw(self.win)
-        self.vis = None
-        self.updateSong(a[0])
+        try:
+            self.musicSelection = Dropmenu(self.win, Point(400,50), a[0], a, self.updateSong)
+            self.musicSelection.draw(self.win)
+            self.vis = None
+            self.updateSong(a[0])
+            
+        except IndexError:
+            self.win.close()
+            print("No \".wav\" Files in \"AudioFiles\" Folder")
+            
+        
 
     def updateSong(self,path):
         
@@ -46,11 +53,18 @@ class MusicPortfolio():
             for i in self.vis.rex:
                 i[0].undraw()
             del self.vis
-            self.albumPic.undraw()
+            try:
+                self.albumPic.undraw()
+            except:
+                self.missingCover.undraw()
+
+                
             
-        
-        self.albumPic = Image(Point(400,250), "AlbumCovers/"+self.covers[path]+".png")
-        self.albumPic.draw(self.win)
+        try:
+            self.albumPic = Image(Point(400,250), "AlbumCovers/"+self.covers[path]+".png")
+            self.albumPic.draw(self.win)
+        except:
+            self.missingCover.draw(self.win)
         path = "AudioFiles/"+self.covers[path]+"_"+path+".wav"
         self.loading.draw(self.win)
         self.vis = vis.visualizer(self.win, self.test, self.play, path, 100)
@@ -61,7 +75,8 @@ class MusicPortfolio():
 def main():
     
     music = MusicPortfolio()
-    
+    if music.win.closed:
+        return 0
         
     m = music.win.getMouse()
     

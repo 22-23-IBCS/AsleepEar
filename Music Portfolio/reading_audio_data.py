@@ -1,11 +1,12 @@
 from scipy.io import wavfile
 import numpy as np
-import time
 import pyfftw
-class AudioData():
 
+class AudioData():
     def __init__(self, audioFile, barcount):
+        
         self.barCount = barcount
+        print("ignore WavFileWarning")
         self.samplerate, self.data = wavfile.read(audioFile)
         self.data = self.data if len(self.data.shape) == 1 else self.data[:,1]
         self.inter = int(self.samplerate*(1/32))

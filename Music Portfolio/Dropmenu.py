@@ -53,9 +53,6 @@ class Dropmenu(GraphicsObject):
         return canvas.create_window(x,y,window=frm)
 
 
-    def dummyClick(self, a):
-        self.window.mouseX = 3
-        self.window.mouseY = 3
-        print("a")
+    
 
         

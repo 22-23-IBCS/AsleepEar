@@ -7,12 +7,11 @@ import tkinter as tk
 class scrollBox(GraphicsObject):
 
     #Constructor for the scrollBox object
-    def __init__(self, win, p, w, l, hasBorder):
+    def __init__(self, win, p, w, l):
         GraphicsObject.__init__(self,[])
         self.anchor = p.clone()
         self.width = w
         self.length = l
-        self.hasBorder = hasBorder
         
     #Returns the values in the text box
     def getText(self):

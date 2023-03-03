@@ -1,0 +1,22 @@
+Temporary instructions for using musicPortfolio.py
+
+1. Place ".png" file in "AlbumCovers" folder
+2. Place ".wav" file in "AudioFiles" folder, ensure ".wav" file starts with the name of the corresponding ".png" file in "AlbumCovers", followed by an underscore. Make sure no other underscores exist in the ".wav" file name.
+(Example: The file "album1.png" in "AlbumCovers" is used by "album1_song.wav" in "AudioFiles")
+
+Note: Program will still run if album cover is absent
+
+
+Example Directory
+Music Portfolio
+|
+|>>>AlbumCovers
+|   |
+|   |album1.png
+|
+|>>>AudioFiles
+|   |
+|   |album1_song.wav
+|
+
+3. Run musicPortfolio.py

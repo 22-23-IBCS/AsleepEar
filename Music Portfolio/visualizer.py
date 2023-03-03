@@ -4,7 +4,7 @@ import threading
 import queue
 import reading_audio_data as Audio
 import numpy as np
-from playIt import sounders
+from playIt import audioOutput
 import copy
 
 
@@ -37,7 +37,7 @@ class visualizer():
         
     def changeY(self):
         if self.isPaused == False:
-            self.thd = threadedTask(self.goNow, self.path)
+            self.thd = musicThread(self.goNow, self.path)
             self.thd.start()
             self.pr.changeText("Pause")
             self.count = 0
@@ -93,12 +93,12 @@ class visualizer():
 
         
         
-class threadedTask(threading.Thread):
+class musicThread(threading.Thread):
 
     def __init__(self, queue, path):
         super().__init__()
         self.queue = queue
-        self.sounds = sounders(path)
+        self.sounds = audioOutput(path)
         self.pr = threading.Event()
         self.resume = threading.Event()
         self.stop = threading.Event()

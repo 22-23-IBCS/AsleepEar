@@ -4,7 +4,7 @@ import threading
 from playsound import playsound
 import tkinter as tk
 
-class sounders():
+class audioOutput():
 
     def __init__(self, path):
         self.setUpSong(path)
